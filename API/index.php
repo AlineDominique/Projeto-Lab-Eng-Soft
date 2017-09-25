@@ -5,7 +5,8 @@
 	include('receitas.php');
 	include('ingredientes.php');
 	include('favoritos.php');
-	
+	include('uploadFotos.php');
+	include('conectar.php');
 	
     //Recupera os valores da URL
 	$metodo = $_SERVER['REQUEST_METHOD'];

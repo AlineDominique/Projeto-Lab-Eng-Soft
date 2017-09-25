@@ -1,6 +1,6 @@
 <?php
 
-//Adicionando Novo usuário
+//Adicionando Novo usuário OK
 function InserirUsuario(){
 	
 	//Recupera conteudo recebido na request
@@ -15,8 +15,7 @@ function InserirUsuario(){
 		$dados = json_decode($conteudo,true);
 		
 		//Verifica se as infromações esperadas foram recebidas
-		if(!isset($dados["Nome"]) || !isset($dados["Email"]) || 
-		   !isset($dados["Telefone"]) || !isset($dados["Cidade"]) || !isset($dados["Bairro"])){
+		if(!isset($dados["Nome"]) || !isset($dados["Email"])){
 			$resposta = mensagens(3);
 		}
 		else{
@@ -29,7 +28,7 @@ function InserirUsuario(){
 
 			
 			//Consulta usuário no banco
-			$query = mysqli_query($conexao,"SELECT idUsuario, Nome, Email FROM Usuario WHERE Email='" .$Email ."'") or die(mysqli_error($conexao));
+			$query = mysqli_query($conexao,"SELECT idUsuario, NomeUsuario, Email FROM Usuario WHERE Email='" .$Email ."'") or die(mysqli_error($conexao));
 			
 			//Verifica se foi retornado algum registro
 			while($dados = mysqli_fetch_array($query))
@@ -42,7 +41,7 @@ function InserirUsuario(){
 				$resposta = mensagens(10);
 			}else{
 				//Recupera o próximo ID de usuário
-				$idUsuario = 1;
+				$idUsuario = 0;
 				$query = mysqli_query($conexao, "SELECT idUsuario FROM Usuario ORDER BY idUsuario DESC LIMIT 1") or die(mysqli_error($conexao));
 				while($dados = mysqli_fetch_array($query)){
 					$idUsuario = $dados["idUsuario"];
@@ -83,14 +82,14 @@ function RecuperaUsuario(){
 			$Email = mysqli_real_escape_string($conexao,$dados["Email"]);
 			
 			//Consulta usuário no banco
-			$query = mysqli_query($conexao,"SELECT idUsuario, Nome, Email FROM Usuario WHERE Email='" .$Email ."'") or die(mysqli_error($conexao));
+			$query = mysqli_query($conexao,"SELECT idUsuario, NomeUsuario, Email FROM Usuario WHERE Email='" .$Email ."'") or die(mysqli_error($conexao));
 			
 			//Verifica se foi retornado algum registro
 			while($dados = mysqli_fetch_array($query))
 			{
 				$resposta = array('idUsuario' => $dados['idUsuario'],
 					'Nome' => $dados['Nome'],
-					'Email' => $dados['Email'],
+					'Email' => $dados['Email']);
 				
 			  $emailCadastrado = true;
 			  break;
@@ -105,7 +104,7 @@ function RecuperaUsuario(){
 	return $resposta;
 }
 
-//Atualiza Usuario existente
+//Atualiza Usuario existente OK
 function AtualizaUsuario($id){
 	
 	//Recupera conteudo recebido na request
@@ -137,15 +136,15 @@ function AtualizaUsuario($id){
 				$Email = mysqli_real_escape_string($conexao,$dados["Email"]);
 				
 				//Consulta usuário no banco
-				$query = mysqli_query($conexao, "UPDATE Usuario SET Nome = '" .$Nome ."', Email = '" .$Email ."' WHERE idUsuario=" .$id) or die(mysqli_error($conexao));
-				$resposta = mensagens(10);
+				$query = mysqli_query($conexao, "UPDATE Usuario SET NomeUsuario = '" .$Nome ."', Email = '" .$Email ."' WHERE idUsuario=" .$id) or die(mysqli_error($conexao));
+				$resposta = mensagens(6);
 			}
 		}
 	}
 	return $resposta;
 }
 
-//Excluindo usuário
+//Excluindo usuário OK
 function ExcluiUsuario($id){
 	
 	//Recupera conteudo recebido na request
@@ -161,8 +160,7 @@ function ExcluiUsuario($id){
 		$id = mysqli_real_escape_string($conexao,$id);
 		
 		//Exclui usuário no banco
-		$query1 = mysqli_query($conexao, "DELETE FROM Receita WHERE idUsuario=" .$id) or die(mysqli_error($conexao));
-		$query2 = mysqli_query($conexao, "DELETE FROM Usuario WHERE idUsuario=" .$id) or die(mysqli_error($conexao));
+		$query = mysqli_query($conexao, "DELETE FROM Usuario WHERE idUsuario=" .$id) or die(mysqli_error($conexao));
 		$resposta = mensagens(8);
 	}
 	return $resposta;

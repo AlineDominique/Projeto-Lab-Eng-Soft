@@ -1,6 +1,6 @@
 <?php
 
-//Adiciona uma receita
+//Adiciona uma receita OK
 function InserirReceitas(){
 	
 	//Recupera conteudo recebido na request
@@ -17,8 +17,8 @@ function InserirReceitas(){
 		$dados = json_decode($conteudo,true);
 		
 		//Verifica se as infromações esperadas foram recebidas
-		if(!isset($dados["NomeReceita"]) || !isset($dados["TempodePreparo"]) || !isset($dados["Porcoes"]) || !isset($dados["Categoria"]) ||
-			!isset($dados["Usuario_idUsuario"]) || !isset($dados["MododePreparo"]) || !isset($dados["Dicas"]) ||  !isset($dados["Foto"]))
+		if(!isset($dados["NomeReceita"]) || !isset($dados["TempodePreparo"]) || !isset($dados["Porcoes"]) || !isset($dados["idUsuario"]) 
+			|| !isset($dados["MododePreparo"]) || !isset($dados["Dicas"]) ||  !isset($dados["Foto"]) || !isset($dados["idCategoria"]) )
 		{
 			$resposta = mensagens(3);
 		}
@@ -29,11 +29,11 @@ function InserirReceitas(){
 			$NomeReceita = mysqli_real_escape_string($conexao,$dados["NomeReceita"]);
 			$TempodePreparo = mysqli_real_escape_string($conexao,$dados["TempodePreparo"]);
 			$Porcoes = mysqli_real_escape_string($conexao,$dados["Porcoes"]);
-			$Categoria = mysqli_real_escape_string($conexao,$dados["Categoria"]);
-			$idUsuario = mysqli_real_escape_string($conexao,$dados["Usuario_idUsuario"]);
+			$idUsuario = mysqli_real_escape_string($conexao,$dados["idUsuario"]);
 			$MododePreparo = mysqli_real_escape_string($conexao,$dados["MododePreparo"]);
 			$Dicas = mysqli_real_escape_string($conexao,$dados["Dicas"]);
 			$Foto = mysqli_real_escape_string($conexao,$dados["Foto"]);
+			$idCategoria = mysqli_real_escape_string($conexao,$dados["idCategoria"]);
 			
 			//Recupera idIngrediente para incrementar 1
 			$idReceita = 0;
@@ -44,12 +44,14 @@ function InserirReceitas(){
 			$idReceita++;
 			
 			//Insere Ingrediente
-			$query = mysqli_query($conexao,"INSERT INTO Receita VALUES(" .$idReceita .",'" .$NomeReceita."','" .$TempodePreparo ."','" .$Porcoes ."','" .$Categoria ."'," .$idUsuario .",'" .$MododePreparo ."','" .$Dicas ."','" .$Foto ."')") or die(mysqli_error($conexao));
+			$query = mysqli_query($conexao,"INSERT INTO Receita VALUES(" .$idReceita .",'" .$NomeReceita."','" .$TempodePreparo ."','" .$Porcoes ."'," .$idUsuario .",'" .$MododePreparo ."','" .$Dicas ."','" .$Foto ."'," .$idCategoria .")") or die(mysqli_error($conexao));
 			$resposta = mensagens(4);
 		}
 	}
 	return $resposta;
 }
+
+// Com Erro
 function AtualizarReceita($id){
 	
 	//Recupera conteudo recebido na request
@@ -69,8 +71,8 @@ function AtualizarReceita($id){
 			$dados = json_decode($conteudo,true);
 			
 			//Verifica se as infromações esperadas foram recebidas
-			if(!isset($dados["NomeReceita"]) || !isset($dados["TempodePreparo"]) || !isset($dados["Porcoes"]) || !isset($dados["Categoria"]) ||
-			!isset($dados["Usuario_idUsuario"]) || !isset($dados["MododePreparo"]) || !isset($dados["Dicas"]) ||  !isset($dados["Foto"]))
+			if(!isset($dados["NomeReceita"]) || !isset($dados["TempodePreparo"]) || !isset($dados["Porcoes"]) || !isset($dados["idUsuario"])
+				|| !isset($dados["MododePreparo"]) || !isset($dados["Dicas"]) ||  !isset($dados["Foto"]) || !isset($dados["idCategoria"]))
 		{
 			$resposta = mensagens(3);
 		}
@@ -81,13 +83,13 @@ function AtualizarReceita($id){
 				$NomeReceita = mysqli_real_escape_string($conexao,$dados["NomeReceita"]);
 				$TempodePreparo = mysqli_real_escape_string($conexao,$dados["TempodePreparo"]);
 				$Porcoes = mysqli_real_escape_string($conexao,$dados["Porcoes"]);
-				$Categoria = mysqli_real_escape_string($conexao,$dados["Categoria"]);
-				$idUsuario = mysqli_real_escape_string($conexao,$dados["Usuario_idUsuario"]);
+				$idUsuario = mysqli_real_escape_string($conexao,$dados["idUsuario"]);
 				$MododePreparo = mysqli_real_escape_string($conexao,$dados["MododePreparo"]);
 				$Dicas = mysqli_real_escape_string($conexao,$dados["Dicas"]);
 				$Foto = mysqli_real_escape_string($conexao,$dados["Foto"]);
+				$idCategoria = mysqli_real_escape_string($conexao,$dados["idCategoria"]);
 						
-				$update = "UPDATE Receita SET NomeReceita = '" .$NomeReceita ."', TempodePreparo = '" .$TempodePreparo."', Porcoes = '" .$Porcoes ."', Categoria = '" .$Categoria ."', idUsuario = " .$idUsuario .", MododePreparo = '" .$MododePreparo ."', Dicas = '" .$Dicas ."', Foto = '" .$Foto ."' WHERE idReceita = ".$idReceita;
+				$update = "UPDATE Receita SET NomeReceita = '" .$NomeReceita ."', TempodePreparo = '" .$TempodePreparo."', Porcoes = '" .$Porcoes ."', idUsuario = " .$idUsuario .", MododePreparo = '" .$MododePreparo ."', Dicas = '" .$Dicas ."', Foto = '" .$Foto ."', idCategoria = " .$idCategoria ." WHERE idReceita = ". $idReceita;
 								
 				//Atualiza Receita no banco
 				$query = mysqli_query($conexao, $update) or die(mysqli_error($conexao));
@@ -97,6 +99,7 @@ function AtualizarReceita($id){
 	}
 	return $resposta;
 }
+// OK
 function ExcluirReceita($id){
 	
 	//Recupera conteudo recebido na request
@@ -119,7 +122,7 @@ function ExcluirReceita($id){
 	return $resposta;
 }
 
-//Menu de Receitas por Categoria
+//Menu de Receitas por Categoria OK
 function ListaPorCategoria($categoriaID){
 	include("conectar.php");
 	
@@ -129,9 +132,9 @@ function ListaPorCategoria($categoriaID){
 	
 	//Consulta Tabela Receita no BD
 	if($categoriaID == 0){
-		$query = mysqli_query($conexao,"SELECT idReceita, NomeReceita, TempodePreparo, Porcoes, Categoria, MododePreparo, Dicas, Foto FROM Receita ORDER BY NomeReceita") or die(mysqli_error($conexao));
+		$query = mysqli_query($conexao,"SELECT r.idReceita, r.NomeReceita, r.TempodePreparo, r.Porcoes, r.idCategoria, r.MododePreparo, r.Dicas, r.Foto, r.idUsuario, u.NomeUsuario FROM Receita as r INNER JOIN Usuario as u on r.idUsuario = u.idUsuario ORDER BY NomeReceita") or die(mysqli_error($conexao));
 	}else{
-		$query = mysqli_query($conexao,"SELECT idReceita, NomeReceita, TempodePreparo, Porcoes, Categoria, MododePreparo, Dicas, Foto FROM Receita WHERE Categoria = '". $categoriaID ."' ORDER BY NomeReceita") or die(mysqli_error($conexao));
+		$query = mysqli_query($conexao,"SELECT r.idReceita, r.NomeReceita, r.TempodePreparo, r.Porcoes, r.idCategoria, r.MododePreparo, r.Dicas, r.Foto , r.idUsuario, u.NomeUsuario FROM Receita as r INNER JOIN Usuario as u on r.idUsuario = u.idUsuario WHERE idCategoria = '". $categoriaID ."' ORDER BY NomeReceita") or die(mysqli_error($conexao));
 	
 	//faz um looping e cria um array com os campos da consulta
 	while($dados = mysqli_fetch_array($query))
@@ -143,14 +146,15 @@ function ListaPorCategoria($categoriaID){
 							'Porcoes' => $dados['Porcoes'],
 							'idUsuario' => $dados['idUsuario'],
 							'NomeUsuario' => $dados['NomeUsuario'],
-							'Categoria' => $dados['Categoria'],
+							'idCategoria' => $dados['idCategoria'],
 							'Dicas' => $dados['Dicas'],
 							'Foto' => $dados['idFoto']); 
 	}
 	return $resposta;
+	}
 }
 
-//Seleção de Receitas na lista de Menu 
+//Seleção de Receitas na lista de Menu OK
 function SelecionarReceita($receitaID){
 	include("conectar.php");
 	
@@ -160,9 +164,9 @@ function SelecionarReceita($receitaID){
 	
 	//Consulta Tabela Receita no BD
 	if($receitaID == 0){
-		$query = mysqli_query($conexao,"SELECT idReceita, NomeReceita, TempodePreparo, Porcoes, Categoria, MododePreparo, Dicas, Foto FROM Receita") or die(mysqli_error($conexao));
-	}else{
-		$query = mysqli_query($conexao,"SELECT idReceita, NomeReceita, TempodePreparo, Porcoes, Categoria, MododePreparo, Dicas, Foto FROM Receita WHERE idReceita = '". $receitaID ."'") or die(mysqli_error($conexao));
+		$query = mysqli_query($conexao,"SELECT r.idReceita, r.NomeReceita, r.TempodePreparo, r.Porcoes, r.idCategoria, r.MododePreparo, r.Dicas, r.Foto, r.idUsuario, u.NomeUsuario FROM Receita as r INNER JOIN Usuario as u on r.idUsuario = u.idUsuario ORDER BY NomeReceita") or die(mysqli_error($conexao));
+	}else{ 
+		$query = mysqli_query($conexao,"SELECT r.idReceita, r.NomeReceita, r.TempodePreparo, r.Porcoes, r.idCategoria, r.MododePreparo, r.Dicas, r.Foto, r.idUsuario, u.NomeUsuario FROM Receita as r INNER JOIN Usuario as u on r.idUsuario = u.idUsuario WHERE r.idReceita = '". $receitaID ."'") or die(mysqli_error($conexao));
 	
 	//faz um looping e cria um array com os campos da consulta
 	while($dados = mysqli_fetch_array($query))
@@ -174,11 +178,12 @@ function SelecionarReceita($receitaID){
 							'Porcoes' => $dados['Porcoes'],
 							'idUsuario' => $dados['idUsuario'],
 							'NomeUsuario' => $dados['NomeUsuario'],
-							'Categoria' => $dados['Categoria'],
+							'idCategoria' => $dados['idCategoria'],
 							'Dicas' => $dados['Dicas'],
-							'Foto' => $dados['idFoto']); 
+							'Foto' => $dados['Foto']); 
 	}
 	return $resposta;
+	}
 }
 
 //Pesquisa de Receitas por Nome ou Ingrediente
@@ -193,22 +198,26 @@ function Pesquisar($pesquisa){
 	if($pesquisa == null){
 		$resposta = mensagem(2);
 	}else{
-		$query = mysqli_query($conexao,"SELECT R.idReceita, R.NomeReceita, R.TempodePreparo, R.Porcoes, R.Categoria, R.MododePreparo, R.Dicas, R.Foto FROM Receita as R INNER JOIN Ingrediente as I on R.idReceita = I.idReceita WHERE R.NomeReceita LIKE '". $pesquisa ."' OR I.NomeIngrediente LIKE '". $pesquisa ."' ORDER BY R.NomeReceita ") or die(mysqli_error($conexao));
+		$query = mysqli_query($conexao,"SELECT r.idReceita, r.NomeReceita, r.TempodePreparo, r.Porcoes, r.idCategoria, r.MododePreparo, r.Dicas,
+		r.Foto, u.idUsuario, u.NomeUsuario FROM Receita as r INNER JOIN Ingredientes as i 
+		INNER JOIN Usuario as u on r.idReceita = i.idReceita 
+		WHERE r.NomeReceita LIKE '%". $pesquisa ."%' OR i.NomeIngrediente LIKE '%". $pesquisa ."%' ORDER BY r.NomeReceita ") or die(mysqli_error($conexao));
 	
 	//faz um looping e cria um array com os campos da consulta
 	while($dados = mysqli_fetch_array($query))
 	{
-		$resposta[] = array('idReceita' => $dados['R.idReceita'],
-							'NomeReceita' => $dados['R.NomeReceita'],
-							'MododePreparo' => $dados['R.MododePreparo'],
-							'TempodePreparo' => $dados['R.TempodePreparo'],
-							'Porcoes' => $dados['R.Porcoes'],
-							'idUsuario' => $dados['R.idUsuario'],
-							'NomeUsuario' => $dados['R.NomeUsuario'],
-							'Categoria' => $dados['R.Categoria'],
-							'Dicas' => $dados['R.Dicas'],
-							'Foto' => $dados['R.idFoto']); 
+		$resposta[] = array('idReceita' => $dados['idReceita'],
+							'NomeReceita' => $dados['NomeReceita'],
+							'MododePreparo' => $dados['MododePreparo'],
+							'TempodePreparo' => $dados['TempodePreparo'],
+							'Porcoes' => $dados['Porcoes'],
+							'idUsuario' => $dados['idUsuario'],
+							'NomeUsuario' => $dados['NomeUsuario'],
+							'idCategoria' => $dados['idCategoria'],
+							'Dicas' => $dados['Dicas'],
+							'Foto' => $dados['Foto']); 
 	}
 	return $resposta;
+	}
 }
 ?>

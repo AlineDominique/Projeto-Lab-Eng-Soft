@@ -16,8 +16,8 @@ function InserirIngrediente(){
 		$dados = json_decode($conteudo,true);
 		
 		//Verifica se as infromações esperadas foram recebidas
-		if(!isset($dados["NomeIngredientes"]) || !isset($dados["Observacao"]) || !isset($dados["UnidMedida"]) || !isset($dados["Quantidade"]) ||
-			!isset($dados["Receita_idReceita"]))
+		if(!isset($dados["NomeIngrediente"]) || !isset($dados["Observacao"]) || !isset($dados["UnidMedida"]) || !isset($dados["Quantidade"]) ||
+			!isset($dados["idReceita"]))
 		{
 			$resposta = mensagens(3);
 		}
@@ -25,11 +25,11 @@ function InserirIngrediente(){
 			include("conectar.php");
 			
 			//Evita SQL injection
-			$NomeIngrediente = mysqli_real_escape_string($conexao,$dados["NomeIngredientes"]);
+			$NomeIngrediente = mysqli_real_escape_string($conexao,$dados["NomeIngrediente"]);
 			$Observacao = mysqli_real_escape_string($conexao,$dados["Observacao"]);
 			$UnidMedida = mysqli_real_escape_string($conexao,$dados["UnidMedida"]);
 			$Quantidade = mysqli_real_escape_string($conexao,$dados["Quantidade"]);
-			$idReceita = mysqli_real_escape_string($conexao,$dados["Receita_idReceita"]);
+			$idReceita = mysqli_real_escape_string($conexao,$dados["idReceita"]);
 					
 			//Recupera idIngrediente para incrementar 1
 			$idIngrediente = 0;
@@ -65,8 +65,8 @@ function AtualizarIngrediente($id){
 			$dados = json_decode($conteudo,true);
 			
 			//Verifica se as infromações esperadas foram recebidas
-			if(!isset($dados["NomeIngredientes"]) || !isset($dados["Observacao"]) || !isset($dados["UnidMedida"]) || !isset($dados["Quantidade"]) ||
-			!isset($dados["Receita_idReceita"]))
+			if(!isset($dados["NomeIngrediente"]) || !isset($dados["Observacao"]) || !isset($dados["UnidMedida"]) || !isset($dados["Quantidade"]) ||
+			!isset($dados["idReceita"]))
 			{
 				$resposta = mensagens(3);
 			}
@@ -75,13 +75,13 @@ function AtualizarIngrediente($id){
 				include("conectar.php");
 				
 				//Evita SQL injection
-				$NomeIngrediente = mysqli_real_escape_string($conexao,$dados["NomeIngredientes"]);
+				$NomeIngrediente = mysqli_real_escape_string($conexao,$dados["NomeIngrediente"]);
 				$Observacao = mysqli_real_escape_string($conexao,$dados["Observacao"]);
 				$UnidMedida = mysqli_real_escape_string($conexao,$dados["UnidMedida"]);
 				$Quantidade = mysqli_real_escape_string($conexao,$dados["Quantidade"]);
-				$idReceita = mysqli_real_escape_string($conexao,$dados["Receita_idReceita"]);
+				$idReceita = mysqli_real_escape_string($conexao,$dados["idReceita"]);
 					
-				$update = "UPDATE Aula SET NomeIngrediente = '" .$NomeIngrediente ."', Observacao = '" .$Observacao ."', Quantidade = '" .$Quantidade ."', idReceita = " .$idReceita ." WHERE idAula = ".$id;		
+				$update = "UPDATE Ingredientes SET NomeIngrediente = '" .$NomeIngrediente ."', Observacao = '" .$Observacao ."', Quantidade = '" .$Quantidade ."', idReceita = " .$idReceita ." WHERE idIngrediente = ".$id;		
 				
 				//Atualiza Ingredientes no banco
 				$query = mysqli_query($conexao, $update) or die(mysqli_error($conexao));
