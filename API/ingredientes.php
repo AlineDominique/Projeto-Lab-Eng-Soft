@@ -1,5 +1,5 @@
 <?php
-
+// OK
 function InserirIngrediente(){
 	
 	//Recupera conteudo recebido na request
@@ -40,12 +40,13 @@ function InserirIngrediente(){
 			$idIngrediente++;
 			
 			//Insere Ingrediente
-			$query = mysqli_query($conexao,"INSERT INTO Ingredientes VALUES(" .$idIngrediente .",'" .$NomeIngrediente."','" .$Observacao ."','" .$UnidMedida ."','" .$Quantidade ."'," .$idReceita .")") or die(mysqli_error($conexao));
+			$query = mysqli_query($conexao,"INSERT INTO Ingredientes VALUES(" .$idIngrediente .",'" .$Quantidade ."','" .$UnidMedida ."','" .$Observacao ."','" .$NomeIngrediente."'," .$idReceita .")") or die(mysqli_error($conexao));
 			$resposta = mensagens(4);
 		}
 	}
 	return $resposta;
 }
+// OK
 function AtualizarIngrediente($id){
 	
 	//Recupera conteudo recebido na request
@@ -81,7 +82,7 @@ function AtualizarIngrediente($id){
 				$Quantidade = mysqli_real_escape_string($conexao,$dados["Quantidade"]);
 				$idReceita = mysqli_real_escape_string($conexao,$dados["idReceita"]);
 					
-				$update = "UPDATE Ingredientes SET NomeIngrediente = '" .$NomeIngrediente ."', Observacao = '" .$Observacao ."', Quantidade = '" .$Quantidade ."', idReceita = " .$idReceita ." WHERE idIngrediente = ".$id;		
+				$update = "UPDATE Ingredientes SET  Quantidade = '" .$Quantidade ."',UnidMedida = '" .$UnidMedida ."', Observacao = '" .$Observacao ."', NomeIngrediente = '" .$NomeIngrediente ."', idReceita = " .$idReceita ." WHERE idIngrediente = ".$id;		
 				
 				//Atualiza Ingredientes no banco
 				$query = mysqli_query($conexao, $update) or die(mysqli_error($conexao));
@@ -91,6 +92,7 @@ function AtualizarIngrediente($id){
 	}
 	return $resposta;
 }
+//OK
 function ExcluirIngrediente($id){
 	
 	//Recupera conteudo recebido na request

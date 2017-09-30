@@ -1,8 +1,8 @@
 -- MySQL Workbench Forward Engineering
 
-DROP DATABASE `BDVeg`;
-CREATE DATABASE `BDVeg` IF NOT EXISTS 
-USE DATABASE `BDVeg`
+CREATE DATABASE IF NOT EXISTS `dbvegs` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `dbvegs`;
+
 -- -----------------------------------------------------
 -- Table `Usuario`
 -- -----------------------------------------------------
@@ -12,8 +12,19 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `NomeUsuario` VARCHAR(100) NULL,
   `Email` VARCHAR(200) NULL,
-  `Senha` VARCHAR(45) NULL,
   PRIMARY KEY (`idUsuario`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Categoria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Categoria` ;
+
+CREATE TABLE IF NOT EXISTS `Categoria` (
+  `idCategoria` INT NOT NULL AUTO_INCREMENT,
+  `NomeCategoria` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`idCategoria`))
 ENGINE = InnoDB;
 
 
@@ -28,13 +39,19 @@ CREATE TABLE IF NOT EXISTS `Receita` (
   `TempodePreparo` VARCHAR(100) NOT NULL,
   `Porcoes` VARCHAR(100) NOT NULL,
   `Categoria` VARCHAR(120) NOT NULL,
-  `Usuario_idUsuario` INT NOT NULL,
+  `idUsuario` INT NOT NULL,
   `MododePreparo` VARCHAR(3000) NOT NULL,
-  `Dicas` VARCHAR(300) NULL,
-  PRIMARY KEY (`idReceita`, `Usuario_idUsuario`),
+  `Dicasl` VARCHAR(300) NULL,
+  `idCategoria` INT NOT NULL,
+  PRIMARY KEY (`idReceita`),
   CONSTRAINT `fk_Receita_Usuario`
-    FOREIGN KEY (`Usuario_idUsuario`)
+    FOREIGN KEY (`idUsuario`)
     REFERENCES `Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Receita_Categoria1`
+    FOREIGN KEY (`idCategoria`)
+    REFERENCES `Categoria` (`idCategoria`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -51,14 +68,15 @@ CREATE TABLE IF NOT EXISTS `Ingredientes` (
   `UnidMedida` VARCHAR(45) NOT NULL,
   `Observacao` VARCHAR(100) NULL,
   `NomeIngredientes` VARCHAR(100) NULL,
-  `Receita_idReceita` INT NOT NULL,
+  `idReceita` INT NOT NULL,
   PRIMARY KEY (`idIngredientes`),
-  CONSTRAINT `fk_Ingredientes_Receita1`
-    FOREIGN KEY (`Receita_idReceita`)
+    CONSTRAINT `fk_Ingredientes_Receita1`
+    FOREIGN KEY (`idReceita`)
     REFERENCES `Receita` (`idReceita`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `ReceitasFav`
@@ -68,9 +86,7 @@ DROP TABLE IF EXISTS `ReceitasFav` ;
 CREATE TABLE IF NOT EXISTS `ReceitasFav` (
   `idUsuario` INT NOT NULL,
   `idReceita` INT NOT NULL,
-  `idFavorito` INT NOT NULL,
-  INDEX `fk_ReceitasFav_Receita1_idx` (`idReceita` ASC),
-  PRIMARY KEY (`idFavorito`),
+  PRIMARY KEY (`idUsuario`, `idReceita`),
   CONSTRAINT `fk_ReceitasFav_Usuario1`
     FOREIGN KEY (`idUsuario`)
     REFERENCES `Usuario` (`idUsuario`)
@@ -82,3 +98,4 @@ CREATE TABLE IF NOT EXISTS `ReceitasFav` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+

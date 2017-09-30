@@ -89,7 +89,7 @@ function AtualizarReceita($id){
 				$Foto = mysqli_real_escape_string($conexao,$dados["Foto"]);
 				$idCategoria = mysqli_real_escape_string($conexao,$dados["idCategoria"]);
 						
-				$update = "UPDATE Receita SET NomeReceita = '" .$NomeReceita ."', TempodePreparo = '" .$TempodePreparo."', Porcoes = '" .$Porcoes ."', idUsuario = " .$idUsuario .", MododePreparo = '" .$MododePreparo ."', Dicas = '" .$Dicas ."', Foto = '" .$Foto ."', idCategoria = " .$idCategoria ." WHERE idReceita = ". $idReceita;
+				$update = "UPDATE Receita SET  NomeReceita = '" .$NomeReceita ."', TempodePreparo = '" .$TempodePreparo ."', Porcoes = '" .$Porcoes ."', idUsuario " .$idUsuario. ", MododePreparo = '" .$MododePreparo ."', Dicas = '" .$Dicas ."', Foto = '" .$Foto ."', idCategoria = " .$idCategoria ." WHERE idReceita = ".$id;
 								
 				//Atualiza Receita no banco
 				$query = mysqli_query($conexao, $update) or die(mysqli_error($conexao));
