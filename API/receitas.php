@@ -35,6 +35,11 @@ function InserirReceitas(){
 			$Foto = mysqli_real_escape_string($conexao,$dados["Foto"]);
 			$idCategoria = mysqli_real_escape_string($conexao,$dados["idCategoria"]);
 			
+			//Faz upload da imagem
+			include("uploadDeFotos.php");
+			$caminhoFoto = uploadDeFotos($Foto);
+
+			
 			//Recupera idIngrediente para incrementar 1
 			$idReceita = 0;
 			$query = mysqli_query($conexao, "SELECT idReceita FROM Receita ORDER BY idReceita DESC LIMIT 1") or die(mysqli_error($conexao));
@@ -44,14 +49,14 @@ function InserirReceitas(){
 			$idReceita++;
 			
 			//Insere Ingrediente
-			$query = mysqli_query($conexao,"INSERT INTO Receita VALUES(" .$idReceita .",'" .$NomeReceita."','" .$TempodePreparo ."','" .$Porcoes ."'," .$idUsuario .",'" .$MododePreparo ."','" .$Dicas ."','" .$Foto ."'," .$idCategoria .")") or die(mysqli_error($conexao));
+			$query = mysqli_query($conexao,"INSERT INTO Receita VALUES(" .$idReceita .",'" .$NomeReceita."','" .$TempodePreparo ."','" .$Porcoes ."'," .$idUsuario .",'" .$MododePreparo ."','" .$Dicas ."','" .$caminhoFoto ."'," .$idCategoria .")") or die(mysqli_error($conexao));
 			$resposta = mensagens(4);
 		}
 	}
 	return $resposta;
 }
 
-// Com Erro
+// OK
 function AtualizarReceita($id){
 	
 	//Recupera conteudo recebido na request
@@ -89,8 +94,17 @@ function AtualizarReceita($id){
 				$Foto = mysqli_real_escape_string($conexao,$dados["Foto"]);
 				$idCategoria = mysqli_real_escape_string($conexao,$dados["idCategoria"]);
 						
-				$update = "UPDATE Receita SET  NomeReceita = '" .$NomeReceita ."', TempodePreparo = '" .$TempodePreparo ."', Porcoes = '" .$Porcoes ."', idUsuario " .$idUsuario. ", MododePreparo = '" .$MododePreparo ."', Dicas = '" .$Dicas ."', Foto = '" .$Foto ."', idCategoria = " .$idCategoria ." WHERE idReceita = ".$id;
-								
+				$update = "UPDATE Receita SET  NomeReceita = '" .$NomeReceita ."', TempodePreparo = '" .$TempodePreparo ."', Porcoes = '" .$Porcoes ."', idUsuario = " .$idUsuario . ", MododePreparo = '" .$MododePreparo ."', Dicas = '" .$Dicas ."', idCategoria = " .$idCategoria;
+				
+				if($Foto != ""){
+					//Faz upload da imagem
+					include("uploadDeFotos.php");
+					$caminhoFoto = uploadDeFotos($Foto);
+					
+					$update .= ", Foto = '" .$caminhoFoto ."'";
+				}
+				$update .= "WHERE idReceita = ".$id;
+				
 				//Atualiza Receita no banco
 				$query = mysqli_query($conexao, $update) or die(mysqli_error($conexao));
 				$resposta = mensagens(6);
@@ -148,7 +162,7 @@ function ListaPorCategoria($categoriaID){
 							'NomeUsuario' => $dados['NomeUsuario'],
 							'idCategoria' => $dados['idCategoria'],
 							'Dicas' => $dados['Dicas'],
-							'Foto' => $dados['idFoto']); 
+							'Foto' => $dados['Foto']); 
 	}
 	return $resposta;
 	}

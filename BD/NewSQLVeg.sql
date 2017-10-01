@@ -28,15 +28,15 @@ CREATE TABLE IF NOT EXISTS `Receita` (
   `TempodePreparo` VARCHAR(100) NOT NULL,
   `Porcoes` VARCHAR(100) NOT NULL,
   `Categoria` VARCHAR(120) NOT NULL,
-  `Usuario_idUsuario` INT NOT NULL,
+  `idUsuario` INT NOT NULL,
   `MododePreparo` VARCHAR(3000) NOT NULL,
   `Dicas` VARCHAR(300) NULL,
-  PRIMARY KEY (`idReceita`, `Usuario_idUsuario`),
+  PRIMARY KEY (`idReceita`),
   CONSTRAINT `fk_Receita_Usuario`
-    FOREIGN KEY (`Usuario_idUsuario`)
+    FOREIGN KEY (`idUsuario`)
     REFERENCES `Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -51,13 +51,13 @@ CREATE TABLE IF NOT EXISTS `Ingredientes` (
   `UnidMedida` VARCHAR(45) NOT NULL,
   `Observacao` VARCHAR(100) NULL,
   `NomeIngredientes` VARCHAR(100) NULL,
-  `Receita_idReceita` INT NOT NULL,
+  `idReceita` INT NOT NULL,
   PRIMARY KEY (`idIngredientes`),
   CONSTRAINT `fk_Ingredientes_Receita1`
-    FOREIGN KEY (`Receita_idReceita`)
+    FOREIGN KEY (`idReceita`)
     REFERENCES `Receita` (`idReceita`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -82,3 +82,22 @@ CREATE TABLE IF NOT EXISTS `ReceitasFav` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Foto`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Foto` ;
+
+CREATE TABLE IF NOT EXISTS `Foto` (
+  `idFoto` INT NOT NULL,
+  `Caminho` VARCHAR(5000) NULL,
+  `idReceita` INT NOT NULL,
+  PRIMARY KEY (`idFoto`),
+  INDEX `fk_Foto_Receita1_idx` (`idReceita` ASC),
+  CONSTRAINT `fk_Foto_Receita1`
+    FOREIGN KEY (`idReceita`)
+    REFERENCES `Receita` (`idReceita`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
